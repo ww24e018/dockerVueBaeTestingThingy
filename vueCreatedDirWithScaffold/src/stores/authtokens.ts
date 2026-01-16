@@ -1,15 +1,19 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import {getDefaultAdminAuthTokenOrEmptyString} from "@/modules/authHelpers.ts";
+import {getDefaultAdminAuthAnswer} from "@/modules/authHelpers.ts";
 
 export const useAuthTokenStore = defineStore('auth_token_store', (state) => {
     const adminToken = ref('');
+    const adminUserId = ref(0);
     const normalUserToken = ref('')
 
     async function getAdminToken() {
-        adminToken.value = await getDefaultAdminAuthTokenOrEmptyString();
+        let authResponse = await getDefaultAdminAuthAnswer();
+        adminUserId.value = authResponse.userId;
+        adminToken.value = authResponse.accessToken;
     }
 
-    return {adminToken, normalUserToken, getAdminToken}
+
+    return {adminToken, adminUserId, normalUserToken, getAdminToken}
 
 })
